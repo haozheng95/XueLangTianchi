@@ -286,7 +286,6 @@ def write_csv(results, file_name):
 
 
 if __name__ == '__main__':
-    t.cuda.clear_memory_allocated()
     # ====================训练部分=========================
     # 生成用于计算IOU的txt
     # xml_txt_IOU
