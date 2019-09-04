@@ -255,8 +255,9 @@ def test(**kwargs):
             test_input_img = test_input_img.cuda()
 
         # 测试集batch为1,压缩第0维
-        test_input_img = t.squeeze(test_input_img, dim=0)
-        test_label = netWork(test_input_img)
+        with t.no_grad():
+            test_input_img = t.squeeze(test_input_img, dim=0)
+            test_label = netWork(test_input_img)
         # 概率  通过softmax可得概率 一张图得到多个结果  shape:[X,2]
         test_label_score = t.nn.functional.softmax(test_label, dim=1)
         # score_order即为有瑕疵得分，从大到小排序
@@ -286,6 +287,7 @@ def write_csv(results, file_name):
 
 
 if __name__ == '__main__':
+    t.cuda.clear_memory_allocated()
     # ====================训练部分=========================
     # 生成用于计算IOU的txt
     # xml_txt_IOU
@@ -296,5 +298,4 @@ if __name__ == '__main__':
 
     # ====================测试部分=========================
     # 开始测试
-    t.cuda.clear_memory_allocated()
     test()
