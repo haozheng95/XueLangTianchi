@@ -20,6 +20,12 @@ from collections import OrderedDict
 from sklearn.metrics import roc_auc_score
 # from xuelang.code.predata.xml_txt_IOU import xml_txt_IOU
 # from xuelang.code.predata.xml_txt_dataset import xml_txt_dataset
+import sys, os
+
+current_dir = os.path.dirname(os.path.abspath(__file__))
+bash_dir = os.path.dirname(current_dir)
+sys.path.append(current_dir)
+sys.path.append(bash_dir)
 from code.utils.config import opt
 from code import models as models
 from code.dataloader.XueLangDataSet import XueLangDataSet
@@ -229,7 +235,8 @@ def test(**kwargs):
             netWork.load_state_dict(t.load(opt.load_model_path, map_location=map_location))
     # 将模型转到GPU
     if opt.use_multi_gpu:
-        netWork = t.nn.DataParallel(netWork, device_ids=[0, 1])
+        with t.no_grad():
+            netWork = t.nn.DataParallel(netWork, device_ids=[0, 1])
         # 将模型转到GPU
     if opt.use_gpu:
         netWork.cuda()
@@ -243,16 +250,15 @@ def test(**kwargs):
     # 迭代数据集加载器
     for ii, (test_data_origin, test_img_name) in enumerate(test_dataloader):
         # test_input_img为模型输入图像的truple
-        test_input_img = Variable(test_data_origin, volatile=True)
-
-        if opt.use_gpu:
-            test_input_img = test_input_img.cuda()
-
-        # 测试集batch为1,压缩第0维
-        test_input_img = t.squeeze(test_input_img, dim=0)
-        test_label = netWork(test_input_img)
-        # 概率  通过softmax可得概率 一张图得到多个结果  shape:[X,2]
-        test_label_score = t.nn.functional.softmax(test_label, dim=1)
+        with t.no_grad():
+            test_input_img = Variable(test_data_origin, volatile=True)
+            if opt.use_gpu:
+                test_input_img = test_input_img.cuda()
+            # 测试集batch为1,压缩第0维
+            test_input_img = t.squeeze(test_input_img, dim=0)
+            test_label = netWork(test_input_img)
+            # 概率  通过softmax可得概率 一张图得到多个结果  shape:[X,2]
+            test_label_score = t.nn.functional.softmax(test_label, dim=1)
         # score_order即为有瑕疵得分，从大到小排序
         score_order, _ = t.sort(test_label_score.data[:, 1], descending=True)
         # 取概率最大值作为最后结果
@@ -280,6 +286,7 @@ def write_csv(results, file_name):
 
 
 if __name__ == '__main__':
+    t.cuda.clear_memory_allocated()
     # ====================训练部分=========================
     # 生成用于计算IOU的txt
     # xml_txt_IOU
