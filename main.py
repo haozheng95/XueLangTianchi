@@ -20,12 +20,6 @@ from collections import OrderedDict
 from sklearn.metrics import roc_auc_score
 # from xuelang.code.predata.xml_txt_IOU import xml_txt_IOU
 # from xuelang.code.predata.xml_txt_dataset import xml_txt_dataset
-import sys, os
-
-current_dir = os.path.dirname(os.path.abspath(__file__))
-bash_dir = os.path.dirname(current_dir)
-sys.path.append(current_dir)
-sys.path.append(bash_dir)
 from code.utils.config import opt
 from code import models as models
 from code.dataloader.XueLangDataSet import XueLangDataSet
