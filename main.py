@@ -268,6 +268,7 @@ def test(**kwargs):
         if score < 0.000001:
             score = 0.000001
         batch_results = [(test_img_name[0], score)]
+        print(batch_results)
         results = results + batch_results
     # 将测试结果写入csv文件中
     write_csv(results, opt.result_file)
