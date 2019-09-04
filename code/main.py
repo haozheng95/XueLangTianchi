@@ -251,15 +251,13 @@ def test(**kwargs):
         # test_input_img为模型输入图像的truple
         with t.no_grad():
             test_input_img = Variable(test_data_origin, volatile=True)
-
             if opt.use_gpu:
                 test_input_img = test_input_img.cuda()
-
             # 测试集batch为1,压缩第0维
             test_input_img = t.squeeze(test_input_img, dim=0)
             test_label = netWork(test_input_img)
-        # 概率  通过softmax可得概率 一张图得到多个结果  shape:[X,2]
-        test_label_score = t.nn.functional.softmax(test_label, dim=1)
+            # 概率  通过softmax可得概率 一张图得到多个结果  shape:[X,2]
+            test_label_score = t.nn.functional.softmax(test_label, dim=1)
         # score_order即为有瑕疵得分，从大到小排序
         score_order, _ = t.sort(test_label_score.data[:, 1], descending=True)
         # 取概率最大值作为最后结果
