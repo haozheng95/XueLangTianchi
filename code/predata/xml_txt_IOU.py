@@ -7,7 +7,7 @@ import glob
 xml对应图片绝对路径   含物体个数   第一个物体对应bbox对应4个坐标       第一个物体对应bbox对应物体名称
 0001.jpg               1           Xmin Ymin Xmax Ymax    破洞
 '''
-class Xml_Txt_IOU():
+class Xml_Txt_IOU(object):
     def parse_rec(self,filename):
         """
         解析一个 PASCAL VOC xml file

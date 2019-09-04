@@ -257,6 +257,7 @@ def test(**kwargs):
             # 测试集batch为1,压缩第0维
             test_input_img = t.squeeze(test_input_img, dim=0)
             test_label = netWork(test_input_img)
+            print(test_label.shape)
             # 概率  通过softmax可得概率 一张图得到多个结果  shape:[X,2]
             test_label_score = t.nn.functional.softmax(test_label, dim=1)
         # score_order即为有瑕疵得分，从大到小排序
