@@ -3,6 +3,10 @@
 # 设置默认参数
 import datetime
 import os
+utils_path = os.path.dirname(os.path.abspath(__file__))
+code_path = os.path.dirname(utils_path)
+base_path = os.path.dirname(code_path)
+data_path = os.path.join(base_path, "data")
 class DefaultConfig():
     env = 'XueLang_'  # visdom 环境的名字
     # 使用的模型，名字必须与models/__init__.py中的名字一致
@@ -26,7 +30,7 @@ class DefaultConfig():
     #数据集地址
     data_root=''  #训练集由xuelangtrainpart123_dataset.txt文件读取，故这里不再制定路径
     # test_data_root='../../data/xuelang_round1_test_a_20180709' #官方测试集地址1
-    test_data_root = '../../data/xuelang_round1_test_b'  # 官方测试集地址2
+    test_data_root = os.path.join(data_path, 'xuelang_round1_test_b')  # 官方测试集地址2
     val_data_root = '/home/bobo/data/finaVal3'  # part123抽取的图片，作为验证集来算AUC
 
 
@@ -66,4 +70,7 @@ class DefaultConfig():
 opt=DefaultConfig()
 
 if __name__ == '__main__':
-    print(opt.checkpoint_root)
+    print(utils_path)
+    print(code_path)
+    print(base_path)
+    print(data_path)
