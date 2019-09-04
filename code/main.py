@@ -235,7 +235,8 @@ def test(**kwargs):
             netWork.load_state_dict(t.load(opt.load_model_path, map_location=map_location))
     # 将模型转到GPU
     if opt.use_multi_gpu:
-        netWork = t.nn.DataParallel(netWork, device_ids=[0, 1])
+        with t.no_grad():
+            netWork = t.nn.DataParallel(netWork, device_ids=[0, 1])
         # 将模型转到GPU
     if opt.use_gpu:
         netWork.cuda()
