@@ -101,6 +101,7 @@ class XueLangDataSet(data.Dataset):
                 if i % 3 == 0:
                     x,y,length_number=int(splited[i]),int(splited[i + 1]),int(splited[i + 2])
                     Img_test = img[x:(x + length_number), y:(y + length_number), ]
+                    print(Img_test)
                     Img_test = self.BGR2RGB(Img_test)
                     Img_test = cv2.resize(Img_test, (self.image_size, self.image_size))
                     Img_test_transforms = self.transforms(Img_test)
@@ -531,7 +532,9 @@ class XueLangDataSet(data.Dataset):
 
 
 
-
+if __name__ == '__main__':
+    a = opt.CropCoordinates.strip().split()
+    print(a)
 
 
 
